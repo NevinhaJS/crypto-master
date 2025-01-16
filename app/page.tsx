@@ -1,101 +1,84 @@
-import Image from "next/image";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <>
+      <div className="min-h-screen p-[max(1vw,1rem)] flex items-end">
+        <h1 className="absolute top-8 text-4xl text-center w-full text-[#dfd3c0] font-orbitron">
+          |-| Crypto Master |-|
+        </h1>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+        <div className="w-[90vw] mx-auto space-y-12">
+          {/* Master's message */}
+          <div className="flex items-start gap-[max(1vw,1rem)]">
+            <div className="w-[max(4vw,4rem)] h-[max(4vw,4rem)] rounded-full">
+              <Avatar className="w-[max(4vw,4rem)] h-[max(4vw,4rem)] rounded-full bg-blue-200">
+                <AvatarImage src="/avatars/robot.jpg" />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+            </div>
+            <div className="bg-[#dfd3c0] rounded-2xl p-[max(1vw,1rem)] max-w-[60%]">
+              <p className="font-medium text-gray-950 text-[max(1.2vw,1.2rem)] font-sans">
+                Hi buddy, my name is Nevinha. You can ask me anything about
+                crypto and I'll do my best to answer your questions!
+              </p>
+            </div>
+          </div>
+
+          {/* User's message */}
+          <div className="flex items-start gap-[max(1vw,1rem)] justify-end">
+            <div className="bg-[#651a66] rounded-2xl p-[max(1vw,1rem)] max-w-[40%]">
+              <p className="font-medium text-white text-[max(1.2vw,1.2rem)] font-sans">
+                Hey master, can you please explain me how to send a transaction
+                using my safe account?
+              </p>
+            </div>
+            <Avatar className="w-[max(4vw,4rem)] h-[max(4vw,4rem)] rounded-ful">
+              <AvatarImage src="/avatars/user.jpg" />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+          </div>
+
+          <div className="flex items-start gap-[max(1vw,1rem)] ">
+            <Avatar className="w-[max(4vw,4rem)] h-[max(4vw,4rem)] rounded-full bg-blue-200">
+              <AvatarImage src="/avatars/robot.jpg" />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+
+            <div className="w-full max-w-[40%] gap-[max(1vw,1rem)] flex flex-col">
+              <Skeleton className="w-full p-[max(1vw,1rem)]" />
+              <Skeleton className="w-[70%] p-[max(1vw,1rem)]" />
+            </div>
+          </div>
+
+          {/* Message input */}
+          <div className="w-full mx-auto relative">
+            <Input
+              type="text"
+              placeholder="Type your message..."
+              className="w-full h-[max(4vw,4rem)] text-[max(1.2vw,1.2rem)] p-[max(1vw,1rem)] rounded-[1.5vw] pl-[2vw] pr-[4vw] bg-[#dfd3c0] text-gray-950 placeholder:text-gray-950 border-0 focus:ring-0 focus:outline-none focus:ring-offset-0 focus:border-0 font-sans"
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            <button className="absolute right-[1vw] top-1/2 -translate-y-1/2 p-2 rounded-full hover:bg-black/5">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-[max(2vw,2rem)] h-[max(2vw,2rem)] hover:stroke-amber-600 transition-all duration-300"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
+                />
+              </svg>
+            </button>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </div>
+    </>
   );
 }
