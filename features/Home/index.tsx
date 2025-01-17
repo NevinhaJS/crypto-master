@@ -12,8 +12,10 @@ import {
   SignedIn,
   SignedOut,
   SignOutButton,
+  useSession,
 } from "@clerk/nextjs";
 import { DoorOpen } from "lucide-react";
+import { useUser } from "@clerk/clerk-react";
 
 type Message = {
   role: "user" | "assistant";
@@ -27,6 +29,9 @@ export default function Home() {
   const [hasNoLimit, setHasNoLimit] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
+  const { user } = useUser();
+
+  const subscriptionId = user?.publicMetadata.subscriptionId;
 
   useEffect(() => {
     setTimeout(() => {
@@ -89,7 +94,7 @@ export default function Home() {
           {
             role: "assistant",
             content:
-              "Sorry, looks like you have already asked more than 5 questions today. Come back tomorrow!",
+              "Sorry, looks like you have already asked more than 5 questions today. Please upgrade to Pro or come back tomorrow!",
           },
         ]);
         break;
@@ -152,7 +157,9 @@ export default function Home() {
             <p className="text-white text-sm">
               You can cancel your subscription at any time
             </p>
-            <Button onClick={() => setIsOpen(true)}>Open Subscription</Button>
+            {!subscriptionId && (
+              <Button onClick={() => setIsOpen(true)}>Upgrade to Pro</Button>
+            )}
 
             <div className="flex items-center gap-2 bg-white text-black p-2 rounded-lg font-normal text-sm">
               <SignOutButton /> <DoorOpen />
