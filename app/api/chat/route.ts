@@ -21,10 +21,11 @@ const ratelimit = new Ratelimit({
 
 export async function POST(req: Request) {
   const { messages } = await req.json();
-  console.log(req.headers);
-  const clientIp = requestIp.getClientIp(req as any);
-  console.log("clientIp", clientIp);
-  const { success } = await ratelimit.limit(clientIp || "127.0.0.1");
+  const ip = (req.headers.get("x-forwarded-for") ?? "127.0.0.1").split(",")[0];
+
+  console.log(req.headers.get("x-forwarded-for"));
+  console.log("clientIp", ip);
+  const { success } = await ratelimit.limit(ip || "127.0.0.1");
 
   if (!success) {
     return new Response("Rate limit exceeded", { status: 429 });
