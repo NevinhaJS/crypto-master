@@ -117,7 +117,7 @@ export default function Home() {
     },
     "w-full h-[max(4vw,4rem)] text-[max(1.2vw,1.2rem)] bg-[#dfd3c0] text-gray-950",
     "placeholder:text-gray-950 p-[max(1vw,1rem)] rounded-[1.5vw] pl-[2vw] pr-[4vw]",
-    "border-0 focus:ring-0 focus:outline-none focus:ring-offset-0 focus:border-0 font-sans"
+    "border-0 focus:ring-0 focus:outline-none focus:ring-offset-0 focus:border-0 font-sans pr-12"
   );
 
   const buttonClasses = clsx(
