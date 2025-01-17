@@ -5,6 +5,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import UserMessage from "@/components/UserMessage";
+import { cn } from "@/lib/utils";
+import clsx from "clsx";
 import { useEffect, useState } from "react";
 
 type Message = {
@@ -12,9 +14,11 @@ type Message = {
   content: string;
 };
 
+const rateLimitExceeded = "Rate limit exceeded";
 export default function Home() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
+  const [hasNoLimit, setHasNoLimit] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -24,8 +28,8 @@ export default function Home() {
       setMessages([
         {
           role: "assistant",
-          content:
-            "Hi buddy, my name is Nevinha. You can ask me anything about crypto and I'll do my best to answer your questions!",
+          content: `Hi buddy, my name is Nevinha. You can ask me anything about crypto and I'll do my best to answer your questions! 
+            But please be smart, I CAN JUST ANSWER 5 QUESTIONS PER DAY!"`,
         },
       ]);
 
@@ -71,6 +75,15 @@ export default function Home() {
       const { value, done } = await reader.read();
       content += value;
 
+      if (content.includes(rateLimitExceeded)) {
+        setHasNoLimit(true);
+        setMessages([
+          ...messages,
+          { role: "assistant", content: rateLimitExceeded },
+        ]);
+        break;
+      }
+
       if (done) break;
 
       setMessages([
@@ -93,6 +106,22 @@ export default function Home() {
       behavior: "smooth",
     });
   }, [messages]);
+
+  const inputClasses = clsx(
+    {
+      "opacity-[0.3] cursor-not-allowed": hasNoLimit,
+    },
+    "w-full h-[max(4vw,4rem)] text-[max(1.2vw,1.2rem)] bg-[#dfd3c0] text-gray-950",
+    "placeholder:text-gray-950 p-[max(1vw,1rem)] rounded-[1.5vw] pl-[2vw] pr-[4vw]",
+    "border-0 focus:ring-0 focus:outline-none focus:ring-offset-0 focus:border-0 font-sans"
+  );
+
+  const buttonClasses = clsx(
+    {
+      "opacity-[0.3] cursor-not-allowed": hasNoLimit,
+    },
+    "absolute right-[1vw] top-1/2 -translate-y-1/2 p-2 rounded-full hover:bg-black/5"
+  );
 
   return (
     <>
@@ -121,11 +150,13 @@ export default function Home() {
               placeholder="Type your message..."
               value={input}
               onChange={handleInputChange}
-              className="w-full h-[max(4vw,4rem)] text-[max(1.2vw,1.2rem)] p-[max(1vw,1rem)] rounded-[1.5vw] pl-[2vw] pr-[4vw] bg-[#dfd3c0] text-gray-950 placeholder:text-gray-950 border-0 focus:ring-0 focus:outline-none focus:ring-offset-0 focus:border-0 font-sans"
+              disabled={hasNoLimit}
+              className={inputClasses}
             />
             <button
               type="submit"
-              className="absolute right-[1vw] top-1/2 -translate-y-1/2 p-2 rounded-full hover:bg-black/5"
+              disabled={hasNoLimit}
+              className={buttonClasses}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

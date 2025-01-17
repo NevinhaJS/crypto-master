@@ -15,15 +15,13 @@ const redis = new Redis({
 // Create a new ratelimiter, that allows 10 requests per 10 seconds
 const ratelimit = new Ratelimit({
   redis: Redis.fromEnv(),
-  limiter: Ratelimit.slidingWindow(10, "10 s"),
+  limiter: Ratelimit.slidingWindow(5, "1 d"),
 });
 
 export async function POST(req: Request) {
   const { messages } = await req.json();
   const ip = (req.headers.get("x-forwarded-for") ?? "127.0.0.1").split(",")[0];
 
-  console.log(req.headers.get("x-forwarded-for"));
-  console.log("clientIp", ip);
   const { success } = await ratelimit.limit(ip || "127.0.0.1");
 
   if (!success) {
