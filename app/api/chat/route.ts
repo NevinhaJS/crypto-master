@@ -1,4 +1,7 @@
 import OpenAI from "openai";
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
+import requestIp from "request-ip";
 
 export const runtime = "edge";
 
@@ -6,8 +9,26 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN,
+});
+// Create a new ratelimiter, that allows 10 requests per 10 seconds
+const ratelimit = new Ratelimit({
+  redis: Redis.fromEnv(),
+  limiter: Ratelimit.slidingWindow(10, "10 s"),
+});
+
 export async function POST(req: Request) {
   const { messages } = await req.json();
+  console.log(req.headers);
+  const clientIp = requestIp.getClientIp(req as any);
+  console.log("clientIp", clientIp);
+  const { success } = await ratelimit.limit(clientIp || "127.0.0.1");
+
+  if (!success) {
+    return new Response("Rate limit exceeded", { status: 429 });
+  }
 
   const response = await openai.chat.completions.create({
     model: "gpt-4",

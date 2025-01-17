@@ -7,6 +7,7 @@ const config = {
     "./pages/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
     "./app/**/*.{ts,tsx}",
+    "./features/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
   ],
   prefix: "",
@@ -60,8 +61,8 @@ const config = {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        sans: ["var(--font-inter)", ...fontFamily.sans],
         mono: fontFamily.mono,
+        inter: ["var(--font-inter)", ...fontFamily.sans],
         orbitron: ["var(--font-orbitron)", ...fontFamily.sans],
       },
       keyframes: {
