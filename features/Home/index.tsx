@@ -97,7 +97,7 @@ export default function Home() {
   return (
     <>
       <div className="min-h-screen p-[max(1vw,1rem)] relative z-2 flex items-end">
-        <h1 className="absolute top-8 text-4xl text-center w-full text-[#dfd3c0] font-orbitron">
+        <h1 className="absolute top-8 left-0 text-[min(6vw,2rem)] text-center w-full text-[#dfd3c0] font-orbitron">
           |-| Crypto Master |-|
         </h1>
 
@@ -112,19 +112,7 @@ export default function Home() {
             </div>
           ))}
 
-          {loading && (
-            <div className="flex items-start gap-[max(1vw,1rem)] ">
-              <Avatar className="w-[max(4vw,4rem)] h-[max(4vw,4rem)] rounded-full bg-blue-200">
-                <AvatarImage src="/avatars/robot.jpg" />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-
-              <div className="w-full max-w-[40%] gap-[max(1vw,1rem)] flex flex-col">
-                <Skeleton className="w-full p-[max(1vw,1rem)]" />
-                <Skeleton className="w-[70%] p-[max(1vw,1rem)]" />
-              </div>
-            </div>
-          )}
+          {loading && <AiMessage loading />}
 
           {/* Message input */}
           <form onSubmit={handleSubmit} className="w-full mx-auto relative">

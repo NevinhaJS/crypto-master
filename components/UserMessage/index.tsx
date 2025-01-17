@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 function UserMessage({ message }: { message: string }) {
   return (
     <div className="flex items-start gap-[max(1vw,1rem)] justify-end">
-      <div className="bg-[#651a66] rounded-2xl p-[max(1vw,1rem)] max-w-[40%]">
+      <div className="bg-[#651a66] rounded-2xl p-[max(1vw,1rem)] sm:max-w-[60%] max-w-full">
         <p className="font-medium text-white text-[max(1.2vw,1.2rem)] font-sans">
           {message}
         </p>
