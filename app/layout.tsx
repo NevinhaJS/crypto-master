@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Orbitron } from "next/font/google";
+import { GoogleAnalytics } from "@next/third-parties/google";
+
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -22,6 +24,8 @@ export default function RootLayout({
       <body className={`${orbitron.className} ${inter.className} antialiased`}>
         {children}
       </body>
+
+      <GoogleAnalytics gaId="G-5V8WHC2C6C" />
     </html>
   );
 }

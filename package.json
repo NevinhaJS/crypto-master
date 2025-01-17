@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@next/third-parties": "^15.1.5",
     "@radix-ui/react-avatar": "^1.1.2",
     "@shadcn/ui": "^0.0.4",
     "@types/request-ip": "^0.0.41",
