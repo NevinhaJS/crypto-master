@@ -1,7 +1,6 @@
 import OpenAI from "openai";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
-import requestIp from "request-ip";
 
 export const runtime = "edge";
 
