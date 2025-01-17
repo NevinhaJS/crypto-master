@@ -79,7 +79,11 @@ export default function Home() {
         setHasNoLimit(true);
         setMessages([
           ...messages,
-          { role: "assistant", content: rateLimitExceeded },
+          {
+            role: "assistant",
+            content:
+              "Sorry, looks like you have already asked more than 5 questions today. Come back tomorrow!",
+          },
         ]);
         break;
       }
