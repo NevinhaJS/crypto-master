@@ -1,6 +1,7 @@
 import OpenAI from "openai";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
+import { auth } from "@clerk/nextjs/server";
 
 export const runtime = "edge";
 
@@ -21,11 +22,14 @@ const ratelimit = new Ratelimit({
 export async function POST(req: Request) {
   const { messages } = await req.json();
   const ip = (req.headers.get("x-forwarded-for") ?? "127.0.0.1").split(",")[0];
+  const { userId } = await auth();
 
-  const { success } = await ratelimit.limit(ip || "127.0.0.1");
+  if (!userId) {
+    const { success } = await ratelimit.limit(ip || "127.0.0.1");
 
-  if (!success) {
-    return new Response("Rate limit exceeded", { status: 429 });
+    if (!success) {
+      return new Response("Rate limit exceeded", { status: 429 });
+    }
   }
 
   const response = await openai.chat.completions.create({
