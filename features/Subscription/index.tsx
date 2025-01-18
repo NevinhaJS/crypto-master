@@ -7,21 +7,23 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { subscriptions } from "@/constants";
+import { User } from "@clerk/nextjs/server";
 import { Check } from "lucide-react";
 import { useState } from "react";
 
 interface SubscriptionProps {
   isOpen: boolean;
   onClose: () => void;
+  user: User;
 }
 
-const SubscriptionModal = ({ isOpen, onClose }: SubscriptionProps) => {
+const SubscriptionModal = ({ isOpen, onClose, user }: SubscriptionProps) => {
   const [loading, setLoading] = useState(false);
 
   const onSubscribe = async () => {
     try {
       setLoading(true);
-      location.href = subscriptions.monthly.link;
+      location.href = `${subscriptions.monthly.link}?prefilled_email=${user.emailAddresses[0].emailAddress}`;
     } catch (error) {
       console.error("Subscription error:", error);
     } finally {

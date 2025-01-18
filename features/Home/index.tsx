@@ -15,6 +15,7 @@ import {
 } from "@clerk/nextjs";
 import { DoorOpen } from "lucide-react";
 import { useUser } from "@clerk/clerk-react";
+import { User } from "@clerk/nextjs/server";
 
 type Message = {
   role: "user" | "assistant";
@@ -165,7 +166,13 @@ export default function Home() {
             </div>
           </SignedIn>
 
-          <SubscriptionModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
+          {user && (
+            <SubscriptionModal
+              user={user as unknown as User}
+              isOpen={isOpen}
+              onClose={() => setIsOpen(false)}
+            />
+          )}
         </div>
 
         <div className="w-[90vw] pt-[6rem] mx-auto space-y-12">
