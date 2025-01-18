@@ -1,6 +1,8 @@
 import OpenAI from "openai";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
+import { auth, User } from "@clerk/nextjs/server";
+import { clerkClient } from "../models/clerk";
 
 export const runtime = "edge";
 
@@ -8,20 +10,28 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN,
-});
-// Create a new ratelimiter, that allows 10 requests per 10 seconds
-const ratelimit = new Ratelimit({
-  redis: Redis.fromEnv(),
-  limiter: Ratelimit.slidingWindow(5, "1 d"),
-});
+const getRateLimit = (user: User | null) => {
+  const subscriptionId = user?.publicMetadata.subscriptionId;
+  const isPro = subscriptionId === "pro";
+
+  const ratelimit = new Ratelimit({
+    redis: Redis.fromEnv(),
+    limiter: Ratelimit.slidingWindow(isPro ? 50 : 5, "1 d"),
+  });
+
+  return ratelimit;
+};
 
 export async function POST(req: Request) {
   const { messages } = await req.json();
   const ip = (req.headers.get("x-forwarded-for") ?? "127.0.0.1").split(",")[0];
+  const { userId } = await auth();
 
+  const user = userId
+    ? await clerkClient.users.getUser(userId as string)
+    : null;
+
+  const ratelimit = getRateLimit(user);
   const { success } = await ratelimit.limit(ip || "127.0.0.1");
 
   if (!success) {

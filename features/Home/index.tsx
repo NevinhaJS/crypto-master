@@ -1,13 +1,21 @@
 "use client";
 
 import AiMessage from "@/components/AiMessage";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
 import UserMessage from "@/components/UserMessage";
-import { cn } from "@/lib/utils";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
+import SubscriptionModal from "../Subscription";
+import { Button } from "@/components/ui/button";
+import {
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  SignOutButton,
+  useSession,
+} from "@clerk/nextjs";
+import { DoorOpen } from "lucide-react";
+import { useUser } from "@clerk/clerk-react";
 
 type Message = {
   role: "user" | "assistant";
@@ -20,6 +28,10 @@ export default function Home() {
   const [input, setInput] = useState("");
   const [hasNoLimit, setHasNoLimit] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
+  const { user } = useUser();
+
+  const subscriptionId = user?.publicMetadata.subscriptionId;
 
   useEffect(() => {
     setTimeout(() => {
@@ -82,7 +94,7 @@ export default function Home() {
           {
             role: "assistant",
             content:
-              "Sorry, looks like you have already asked more than 5 questions today. Come back tomorrow!",
+              "Sorry, looks like you have already asked more than 5 questions today. Please upgrade to Pro or come back tomorrow!",
           },
         ]);
         break;
@@ -133,6 +145,29 @@ export default function Home() {
         <h1 className="absolute top-8 left-0 text-[min(6vw,2rem)] text-center w-full text-[#dfd3c0] font-orbitron">
           |-| Crypto Master |-|
         </h1>
+
+        <div className="absolute top-8 border border-white rounded-xl p-4 right-4 flex items-center gap-2 flex-col">
+          <SignedOut>
+            <div className="flex items-center gap-2 bg-white text-black p-2 rounded-lg font-normal text-sm">
+              <SignInButton />
+            </div>
+          </SignedOut>
+
+          <SignedIn>
+            <p className="text-white text-sm">
+              You can cancel your subscription at any time
+            </p>
+            {!subscriptionId && (
+              <Button onClick={() => setIsOpen(true)}>Upgrade to Pro</Button>
+            )}
+
+            <div className="flex items-center gap-2 bg-white text-black p-2 rounded-lg font-normal text-sm">
+              <SignOutButton /> <DoorOpen />
+            </div>
+          </SignedIn>
+
+          <SubscriptionModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
+        </div>
 
         <div className="w-[90vw] pt-[6rem] mx-auto space-y-12">
           {messages.map((message, index) => (
