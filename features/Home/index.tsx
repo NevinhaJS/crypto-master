@@ -17,6 +17,7 @@ import { DoorOpen } from "lucide-react";
 import { useUser } from "@clerk/clerk-react";
 import { User } from "@clerk/nextjs/server";
 import { subscriptions } from "@/constants";
+import MobileMenu from "@/components/MobileMenu";
 
 type Message = {
   role: "user" | "assistant";
@@ -142,12 +143,14 @@ export default function Home() {
 
   return (
     <>
+      <MobileMenu />
       <div className="min-h-screen p-[max(1vw,1rem)] relative z-2 flex items-end">
-        <h1 className="absolute top-8 left-0 text-[min(6vw,2rem)] text-center w-full text-[#dfd3c0] font-orbitron">
+        <h1 className="absolute hidden md:block top-8 left-0 text-[min(6vw,2rem)] md:text-left md:pl-[4vw] w-full text-[#dfd3c0] font-orbitron">
           |-| Crypto Master |-|
         </h1>
 
-        <div className="absolute top-8 border border-white rounded-xl p-4 right-4 flex items-center gap-2 flex-col">
+        {/* Subscription section - desktop only */}
+        <div className="absolute top-8 border border-white rounded-xl p-4 right-4 hidden md:flex items-center gap-2 flex-col">
           <SignedOut>
             <div className="flex items-center gap-2 bg-white text-black p-2 rounded-lg font-normal text-sm">
               <SignInButton />
