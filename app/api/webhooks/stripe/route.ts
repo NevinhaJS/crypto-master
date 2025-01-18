@@ -26,9 +26,8 @@ export async function POST(req: Request) {
     return new NextResponse(`Webhook Error: ${error.message}`, { status: 400 });
   }
 
-  const session = event.data.object as Stripe.Checkout.Session;
-
   if (event.type === "checkout.session.completed") {
+    const session = event.data.object as Stripe.Checkout.Session;
     const customerEmail = session.customer_details?.email;
     const customerId = session.customer;
 
@@ -55,27 +54,34 @@ export async function POST(req: Request) {
   }
 
   if (event.type === "customer.subscription.deleted") {
-    const customerEmail = session.customer_details?.email;
+    const session = event.data.object as Stripe.Subscription;
 
-    if (!customerEmail) {
-      return new NextResponse("Customer email not found", { status: 400 });
+    if (!session.customer) {
+      return new NextResponse("Customer not found", { status: 400 });
     }
+    try {
+      const users = await clerkClient.users.getUserList({
+        query: `publicMetadata.stripeCustomerId:${session.customer}`,
+      });
 
-    const users = await clerkClient.users.getUserList({
-      emailAddress: [customerEmail],
-    });
+      const user = users.data[0];
 
-    const user = users.data[0];
+      if (!user) {
+        return new NextResponse("User not found", { status: 404 });
+      }
 
-    if (!user) {
-      return new NextResponse("User not found", { status: 404 });
+      await clerkClient.users.updateUser(user.id, {
+        publicMetadata: {
+          subscriptionId: null,
+          stripeCustomerId: null,
+        },
+      });
+    } catch (err) {
+      console.log(err);
+      return new NextResponse("Error while trying to get the user from clerk", {
+        status: 500,
+      });
     }
-
-    await clerkClient.users.updateUser(user.id, {
-      publicMetadata: {
-        subscriptionId: null,
-      },
-    });
   }
 
   return new NextResponse(null, { status: 200 });
