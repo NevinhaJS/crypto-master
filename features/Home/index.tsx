@@ -16,6 +16,7 @@ import {
 import { DoorOpen } from "lucide-react";
 import { useUser } from "@clerk/clerk-react";
 import { User } from "@clerk/nextjs/server";
+import { subscriptions } from "@/constants";
 
 type Message = {
   role: "user" | "assistant";
@@ -157,7 +158,13 @@ export default function Home() {
             <p className="text-white text-sm">
               You can cancel your subscription at any time
             </p>
-            {subscriptionId !== "pro" && (
+            {subscriptionId === "pro" ? (
+              <Button
+                onClick={() => window.open(subscriptions.monthly.cancel_link)}
+              >
+                Cancel Subscription
+              </Button>
+            ) : (
               <Button onClick={() => setIsOpen(true)}>Upgrade to Pro</Button>
             )}
 

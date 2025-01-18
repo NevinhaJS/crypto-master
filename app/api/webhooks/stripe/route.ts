@@ -30,6 +30,7 @@ export async function POST(req: Request) {
 
   if (event.type === "checkout.session.completed") {
     const customerEmail = session.customer_details?.email;
+    const customerId = session.customer;
 
     if (!customerEmail) {
       return new NextResponse("Customer email not found", { status: 400 });
@@ -48,6 +49,7 @@ export async function POST(req: Request) {
     await clerkClient.users.updateUser(user.id, {
       publicMetadata: {
         subscriptionId: "pro",
+        stripeCustomerId: customerId,
       },
     });
   }
