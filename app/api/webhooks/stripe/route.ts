@@ -58,15 +58,16 @@ export async function POST(req: Request) {
     const resp: any = await stripe.customers.retrieve(
       session.customer as string
     );
-    console.log("resp", resp);
+
     if (!resp?.email) {
       return new NextResponse("Customer email not found", { status: 400 });
     }
+
     try {
       const users = await clerkClient.users.getUserList({
         emailAddress: [resp.email],
       });
-      console.log(users);
+
       const user = users.data[0];
 
       if (!user) {
