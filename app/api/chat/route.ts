@@ -38,12 +38,6 @@ export async function POST(req: Request) {
     return new Response("Rate limit exceeded", { status: 429 });
   }
 
-  // await clerkClient.users.updateUser(userId as string, {
-  //   publicMetadata: {
-  //     subscriptionId: "test",
-  //   },
-  // });
-
   const response = await openai.chat.completions.create({
     model: "gpt-4o-mini",
     messages: [
