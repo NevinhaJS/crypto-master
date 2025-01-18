@@ -23,7 +23,12 @@ const SubscriptionModal = ({ isOpen, onClose, user }: SubscriptionProps) => {
   const onSubscribe = async () => {
     try {
       setLoading(true);
-      location.href = `${subscriptions.monthly.link}?prefilled_email=${user.emailAddresses[0].emailAddress}`;
+
+      window.open(
+        `${subscriptions.monthly.link}?prefilled_email=${user.emailAddresses[0].emailAddress}`,
+        "_blank",
+        "noopener, noreferrer"
+      );
     } catch (error) {
       console.error("Subscription error:", error);
     } finally {
