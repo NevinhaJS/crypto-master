@@ -12,7 +12,6 @@ import {
   SignedIn,
   SignedOut,
   SignOutButton,
-  useSession,
 } from "@clerk/nextjs";
 import { DoorOpen } from "lucide-react";
 import { useUser } from "@clerk/clerk-react";
@@ -157,7 +156,7 @@ export default function Home() {
             <p className="text-white text-sm">
               You can cancel your subscription at any time
             </p>
-            {!subscriptionId && (
+            {subscriptionId !== "pro" && (
               <Button onClick={() => setIsOpen(true)}>Upgrade to Pro</Button>
             )}
 
