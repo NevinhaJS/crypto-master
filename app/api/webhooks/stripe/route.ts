@@ -55,15 +55,18 @@ export async function POST(req: Request) {
 
   if (event.type === "customer.subscription.deleted") {
     const session = event.data.object as Stripe.Subscription;
-
-    if (!session.customer) {
-      return new NextResponse("Customer not found", { status: 400 });
+    const resp: any = await stripe.customers.retrieve(
+      session.customer as string
+    );
+    console.log("resp", resp);
+    if (!resp?.email) {
+      return new NextResponse("Customer email not found", { status: 400 });
     }
     try {
       const users = await clerkClient.users.getUserList({
-        query: `publicMetadata.stripeCustomerId:${session.customer}`,
+        emailAddress: [resp.email],
       });
-
+      console.log(users);
       const user = users.data[0];
 
       if (!user) {
